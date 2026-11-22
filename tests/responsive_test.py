@@ -5,6 +5,7 @@ Loads every EN/ES page at 15 screen widths and fails if any page:
   - has an element sticking out past the right edge
   - throws a JavaScript error
   - has a broken internal link or stylesheet/script
+  - has a box that doesn't line up with its section bar (laptop/desktop widths)
   - has a menu button that does not open the menu (narrow screens)
   - has a Feedback button or panel that does not fit on screen
 
@@ -59,6 +60,23 @@ OVERFLOW_JS = """() => {
   return bad;
 }"""
 
+ALIGN_JS = """() => {
+  // At laptop/desktop widths, boxed elements must line up with their section's header bar.
+  if (innerWidth < 1024) return [];
+  const bad = [], boxes = '.key, .faq details, .cards, .rows, .roles, .ways, .people, .teamstrip, .duo';
+  for (const sec of document.querySelectorAll('main .sec')) {
+    const h = sec.querySelector(':scope > h2'); if (!h) continue;
+    const hr = h.getBoundingClientRect();
+    for (const b of sec.querySelectorAll(boxes)) {
+      if (b.parentElement.closest(boxes)) continue;
+      const r = b.getBoundingClientRect(); if (!r.width) continue;
+      if (Math.abs(r.right - hr.right) > 2 || Math.abs(r.left - hr.left) > 2)
+        bad.push('"' + h.textContent.trim().slice(0, 40) + '": <' + b.tagName.toLowerCase() + '.' + String(b.className).split(' ')[0] + '> spans ' + Math.round(r.left) + '-' + Math.round(r.right) + 'px but the section bar spans ' + Math.round(hr.left) + '-' + Math.round(hr.right) + 'px');
+    }
+  }
+  return bad;
+}"""
+
 FITS_JS = """(sel) => { const e = document.querySelector(sel); if (!e) return 'missing';
   const r = e.getBoundingClientRect();
   return (r.left >= 0 && r.top >= 0 && r.right <= innerWidth + 1 && r.bottom <= innerHeight + 1) ? '' : 'off screen ' + JSON.stringify([r.left, r.top, r.right, r.bottom]); }"""
@@ -94,6 +112,8 @@ def main():
                 page.goto(base + p, wait_until='load')
                 for b in page.evaluate(OVERFLOW_JS):
                     failures.append('%s: %s' % (tag, b))
+                for b in page.evaluate(ALIGN_JS):
+                    failures.append('%s: misaligned box: %s' % (tag, b))
                 # Menu button (shown on narrow screens) must open the menu.
                 mb = page.locator('.menu-btn')
                 if mb.count() and mb.is_visible():
