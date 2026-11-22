@@ -4,9 +4,9 @@ Website for Cultivando Futuros (cfuturos.org)
 ## Review mode (current)
 The site is in **team review mode**: a yellow "Draft for review" banner, a
 `noindex` tag on every page plus `robots.txt` so search engines don't list it,
-and a **Feedback** button (`feedback.js`) on every page. Comments come in as
-one structured row each: page, language, section, comment, current wording,
-suggested wording, priority, name.
+and a **Feedback** button (`feedback.js`) on every page. Reviewers type into
+one box ("What needs to change?"); each comment arrives as a row with the
+page and language added automatically. The form closes after sending.
 
 To launch publicly: remove the banner, the `noindex` meta tags, `robots.txt`
 and the `feedback.js` script tags.
