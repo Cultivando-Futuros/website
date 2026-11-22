@@ -19,16 +19,16 @@
   // Fill these in from the Google Form's "Get pre-filled link" URL.
   // action: https://docs.google.com/forms/d/e/<FORM_ID>/formResponse
   var GOOGLE_FORM = {
-    action: '',
+    action: 'https://docs.google.com/forms/d/e/1FAIpQLSeuvVoE3v-eTjSHYIDcjlQtQLEMqmvN2Hprum-q12QQZ6AYnw/formResponse',
     fields: {
-      page: '',        // e.g. 'entry.123456789'
-      language: '',
-      section: '',
-      comment: '',
-      current: '',
-      suggested: '',
-      priority: '',
-      name: ''
+      page: 'entry.1050328772',
+      language: 'entry.185552754',
+      section: 'entry.1158661852',
+      comment: 'entry.833408865',
+      current: 'entry.313724622',
+      suggested: 'entry.1421778569',
+      priority: 'entry.138961065',
+      name: 'entry.1985379481'
     }
   };
 
